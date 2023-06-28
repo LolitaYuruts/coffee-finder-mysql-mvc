@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aircraft Position Report (Live Updates)</title>
+    <script>
+        var socket = new WebSocket('ws://' + window.location.host + '/ws');
+
+        socket.onopen = function () {
+            console.log('WebSocket connection is open for business!');
+        };
+
+        socket.onmessage = function (message) {
+            var text = "";
+            var arrC = message.data.split("Coffee");
+            var c = "";
+
+            for (i = 1; i < arrC.length; i++) {
+                c = (arrC[i].endsWith(", "))
+                    ? arrC[i].substring(0, arrC[i].length - 2)
+                    : arrC[i]
+
+                text += "Coffee" + c + "\n\n";
+            }
+
+            document.getElementById("coffees").innerText = text;
+        };
+
+        socket.onclose = function () {
+            console.log('WebSocket connection closed!');
+        };
+    </script>
+</head>
+<body>
+<h1>Available coffees</h1>
+<div style="border-style: solid; border-width: 2px; margin-top: 15px;
+        margin-bottom: 15px; margin-left: 15px; margin-right: 15px;">
+    <label id="coffees"></label>
+</div>
+</body>
+</html>
